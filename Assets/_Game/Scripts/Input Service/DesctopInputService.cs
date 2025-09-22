@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 namespace Game.Services.Input
 {
-    public sealed class DesktopInputService : IInputService, IInitializable, IDisposable
+    public sealed class DesktopInputService : IInputService, IInitializable, IDisposable, IFixedUpdatable
     {
         private readonly InputSystem_Actions _inputActions;
 
@@ -14,24 +14,25 @@ namespace Game.Services.Input
         public DesktopInputService()
         {
             _inputActions = new InputSystem_Actions();
-            _inputActions.Enable();
         }
 
         public void Initialize()
         {
-            _inputActions.Player.Move.performed += OnMovePerformed;
+            _inputActions.Enable();
         }
 
         public void Dispose()
         {
-            _inputActions.Player.Move.performed -= OnMovePerformed;
+            _inputActions.Dispose();
         }
 
-        private void OnMovePerformed(InputAction.CallbackContext context)
+        public void FixedUpdate(float fixedDeltaTile)
         {
-            var inputVector = context.ReadValue<Vector2>();
-            Vector3 moveVector = new Vector3(inputVector.X, 0f, inputVector.Y);
-
+            var inputVector = _inputActions.Player.Move.ReadValue<Vector2>();
+            if (inputVector == Vector2.zero)
+                return;
+            
+            Vector3 moveVector = new Vector3(inputVector.x, 0f, inputVector.y);
             MovePerformed?.Invoke(moveVector);
         }
     }
