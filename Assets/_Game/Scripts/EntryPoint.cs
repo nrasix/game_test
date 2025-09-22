@@ -24,6 +24,7 @@ namespace Game.Services
             var inputService = new DesktopInputService();
             _initializables.Add(inputService);
             _disposables.Add(inputService);
+            _fixedUpdatables.Add(inputService);
             
             _character.Init(inputService);
         }
