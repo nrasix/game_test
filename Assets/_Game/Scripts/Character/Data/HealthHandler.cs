@@ -1,6 +1,6 @@
 ﻿namespace Game.Services.Character.Data
 {
-    public class HealthHandler
+    public sealed class HealthHandler
     {
         public int Health { get; private set; }
 
