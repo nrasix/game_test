@@ -1,17 +1,17 @@
 ﻿using Game.Utilities;
 using System;
-using System.Numerics;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Game.Services.Input
 {
-    public sealed class DesctopInputService : IInputService, IInitializable, IDisposable
+    public sealed class DesktopInputService : IInputService, IInitializable, IDisposable
     {
         private readonly InputSystem_Actions _inputActions;
 
         public event Action<Vector3> MovePerformed;
 
-        public DesctopInputService()
+        public DesktopInputService()
         {
             _inputActions = new InputSystem_Actions();
             _inputActions.Enable();
@@ -29,8 +29,10 @@ namespace Game.Services.Input
 
         private void OnMovePerformed(InputAction.CallbackContext context)
         {
-            var result = context.ReadValue<Vector2>();
-            MovePerformed?.Invoke(new Vector3(result.x, 0, result.y));
+            var inputVector = context.ReadValue<Vector2>();
+            Vector3 moveVector = new Vector3(inputVector.X, 0f, inputVector.Y);
+
+            MovePerformed?.Invoke(moveVector);
         }
     }
 }
