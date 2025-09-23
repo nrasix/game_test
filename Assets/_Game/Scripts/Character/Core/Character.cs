@@ -50,29 +50,7 @@ namespace Game
 
         private void LookPerformed(Vector3 vector)
         {
-            // Raycast от камеры через позицию курсора
-            Ray ray = Camera.main.ScreenPointToRay(vector);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
-            {
-                // Получаем точку на земле
-                Vector3 targetPoint = hit.point;
-                _testPos = targetPoint;
-                targetPoint.y = transform.position.y; // Игнорируем Y для вида сверху (поворот только в XZ)
 
-                // Вычисляем направление от персонажа к точке
-                Vector3 direction = targetPoint - transform.position;
-                direction.y = 0f; // Только XZ для поворота вокруг Y
-
-                if (direction != Vector3.zero)
-                {
-                    // Мгновенный поворот
-                    transform.rotation = Quaternion.LookRotation(direction);
-
-                    // Или smooth поворот (опционально):
-                    // Quaternion targetRotation = Quaternion.LookRotation(direction);
-                    // transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-                }
-            }
         }
 
         private void OnDrawGizmos()

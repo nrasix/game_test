@@ -44,8 +44,6 @@ namespace Game.Services.Input
         private void OnAttack(InputAction.CallbackContext context)
         {
             var mousePos2D = _inputActions.Player.Look.ReadValue<Vector2>();
-            Vector3 mouseScreenPos = new Vector3(mousePos2D.x, mousePos2D.y, 0f);
-            LookPerformed?.Invoke(mouseScreenPos);
         }
     }
 }
