@@ -21,7 +21,7 @@ namespace Game.Services
             _disposables = new();
             _fixedUpdatables = new();
 
-            var inputService = new DesktopInputService();
+            var inputService = new InputService();
             _initializables.Add(inputService);
             _disposables.Add(inputService);
             _fixedUpdatables.Add(inputService);
