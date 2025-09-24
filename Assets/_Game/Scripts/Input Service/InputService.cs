@@ -8,13 +8,19 @@ namespace Game.Services.Input
     public sealed class InputService : IInputService, IInitializable, IDisposable, IFixedUpdatable
     {
         private readonly InputSystem_Actions _inputActions;
+        private readonly Camera _mainCamera;
 
-        public event Action<Vector3> MovePerformed;
-        public event Action<Vector3> LookPerformed;
+        private LayerMask _groundLayer;
 
-        public InputService()
+        public event Action<Vector3> OnMove;
+        public event Action<Vector3> OnTouchScreen;
+
+        public InputService(Camera camera, LayerMask groundLayer)
         {
             _inputActions = new InputSystem_Actions();
+
+            _groundLayer = groundLayer;
+            _mainCamera = camera;
         }
 
         public void Initialize()
@@ -38,12 +44,20 @@ namespace Game.Services.Input
                 return;
 
             Vector3 moveVector = new Vector3(inputVector.x, 0f, inputVector.y);
-            MovePerformed?.Invoke(moveVector);
+            OnMove?.Invoke(moveVector);
         }
 
         private void OnAttack(InputAction.CallbackContext context)
         {
-            var mousePos2D = _inputActions.Player.Look.ReadValue<Vector2>();
+            var mousePos2D = _inputActions.Player.Point.ReadValue<Vector2>();
+
+            Ray ray = _mainCamera.ScreenPointToRay(mousePos2D);
+
+            if (Physics.Raycast(ray, out var hitPoint, Mathf.Infinity, _groundLayer))
+            {
+                Vector3 worldPoint = hitPoint.point;
+                OnTouchScreen?.Invoke(worldPoint);
+            }
         }
     }
 }

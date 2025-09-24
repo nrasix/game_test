@@ -16,12 +16,12 @@ namespace Game
             _inputService = inputService;
             _characterController = characterController;
 
-            _inputService.MovePerformed += OnMoveInput;
+            _inputService.OnMove += OnMoveInput;
         }
 
         public void Dispose()
         {
-            _inputService.MovePerformed -= OnMoveInput;
+            _inputService.OnMove -= OnMoveInput;
         }
 
         private void OnMoveInput(Vector3 direction)

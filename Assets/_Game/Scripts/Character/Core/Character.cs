@@ -17,8 +17,6 @@ namespace Game
 
         private IInputService _inputService;
 
-        private Vector3 _testPos;
-
         public Transform Transform => transform;
 
         public void Init(IInputService inputService)
@@ -27,36 +25,21 @@ namespace Game
 
             var characterController = GetComponent<CharacterController>();
             _directionMoveComponent = new(inputService, characterController);
-            //_trasformRotator = new(transform, inputService);
+            _trasformRotator = new(transform, inputService);
 
             _healthHandler = new(_health);
-
-            _inputService.LookPerformed += LookPerformed;
         }
 
         private void OnDestroy()
         {
             _directionMoveComponent.Dispose();
-            //_trasformRotator.Dispose();
-
-            _inputService.LookPerformed -= LookPerformed;
+            _trasformRotator.Dispose();
         }
 
         public void GetDamage(int damage)
         {
             Debug.Log("Player is get damage!");
             _healthHandler.SubjectHealth(_health);
-        }
-
-        private void LookPerformed(Vector3 vector)
-        {
-
-        }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(_testPos, 1f);
         }
     }
 }
