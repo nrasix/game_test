@@ -43,7 +43,7 @@ namespace Game
         {
             Vector3 pos = _characterController.transform.position;
 
-            pos.x = Mathf.Clamp(pos.x, _horizontalLimit.y, _horizontalLimit.y);
+            pos.x = Mathf.Clamp(pos.x, _horizontalLimit.x, _horizontalLimit.y);
             pos.z = Mathf.Clamp(pos.z, _verticalLimit.x, _verticalLimit.y);
 
             _characterController.transform.position = pos;
