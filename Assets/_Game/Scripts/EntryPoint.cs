@@ -1,3 +1,4 @@
+using Game.Enemies;
 using Game.Services.Input;
 using Game.Utilities;
 using System;
@@ -11,6 +12,9 @@ namespace Game.Services
         [SerializeField] private Game.Character _character;
         [SerializeField] private Camera _mainCamera;
         [SerializeField] private LayerMask _groundLayer;
+
+        [Space(5)]
+        [SerializeField] private Enemy _enemy;
 
         private HashSet<IInitializable> _initializables;
         private HashSet<IDisposable> _disposables;
@@ -28,6 +32,7 @@ namespace Game.Services
             _fixedUpdatables.Add(inputService);
 
             _character.Init(inputService, _mainCamera);
+            _enemy.Init(_character);
         }
 
         public void Start()

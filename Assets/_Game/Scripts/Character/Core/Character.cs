@@ -5,11 +5,11 @@ using UnityEngine;
 
 namespace Game
 {
-    [RequireComponent(typeof(CharacterController))]
     public class Character : MonoBehaviour, ITarget, IDamageble
     {
         [SerializeField] private float _moveSpeed = 5f;
         [SerializeField] private int _health = 5;
+        [SerializeField] private CapsuleCollider _capsuleCollider;
 
         private HealthHandler _healthHandler;
         private DirectionMoveComponent _directionMoveComponent;
@@ -23,11 +23,16 @@ namespace Game
         {
             _inputService = inputService;
 
-            var characterController = GetComponent<CharacterController>();
-            _directionMoveComponent = new(inputService, characterController, mainCamera);
+            _directionMoveComponent = new(inputService, transform, mainCamera, _capsuleCollider.radius);
             _trasformRotator = new(transform, inputService);
 
             _healthHandler = new(_health);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            Debug.Log("Enemy has trigger!");
+            //damageble.GetDamage(_damageAmount);
         }
 
         private void OnDestroy()
