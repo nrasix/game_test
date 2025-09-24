@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Game.Services
 {
-    public sealed class EntyPoint : MonoBehaviour
+    public sealed class EntryPoint : MonoBehaviour
     {
         [SerializeField] private Game.Character _character;
         [SerializeField] private Camera _mainCamera;
@@ -27,7 +27,7 @@ namespace Game.Services
             _disposables.Add(inputService);
             _fixedUpdatables.Add(inputService);
 
-            _character.Init(inputService);
+            _character.Init(inputService, _mainCamera);
         }
 
         public void Start()

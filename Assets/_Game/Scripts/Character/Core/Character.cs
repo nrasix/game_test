@@ -19,12 +19,12 @@ namespace Game
 
         public Transform Transform => transform;
 
-        public void Init(IInputService inputService)
+        public void Init(IInputService inputService, Camera mainCamera)
         {
             _inputService = inputService;
 
             var characterController = GetComponent<CharacterController>();
-            _directionMoveComponent = new(inputService, characterController);
+            _directionMoveComponent = new(inputService, characterController, mainCamera);
             _trasformRotator = new(transform, inputService);
 
             _healthHandler = new(_health);

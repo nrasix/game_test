@@ -8,15 +8,23 @@ namespace Game
     {
         private float _moveSpeed = 5f;
 
-        private IInputService _inputService;
-        private CharacterController _characterController;
+        private readonly IInputService _inputService;
+        private readonly CharacterController _characterController;
 
-        public DirectionMoveComponent(IInputService inputService, CharacterController characterController)
+        private readonly Camera _camera;
+
+        private Vector2 _horizontalLimit;
+        private Vector2 _verticalLimit;
+
+        public DirectionMoveComponent(IInputService inputService, CharacterController characterController, Camera camera)
         {
             _inputService = inputService;
             _characterController = characterController;
+            _camera = camera;
 
             _inputService.OnMove += OnMoveInput;
+
+            GetLimitForPlayerMove();
         }
 
         public void Dispose()
@@ -27,6 +35,36 @@ namespace Game
         private void OnMoveInput(Vector3 direction)
         {
             _characterController.Move(direction.normalized * _moveSpeed * Time.deltaTime);
+
+            ConstrainToCameraBounds();
+        }
+
+        private void ConstrainToCameraBounds()
+        {
+            Vector3 pos = _characterController.transform.position;
+
+            pos.x = Mathf.Clamp(pos.x, _horizontalLimit.y, _horizontalLimit.y);
+            pos.z = Mathf.Clamp(pos.z, _verticalLimit.x, _verticalLimit.y);
+
+            _characterController.transform.position = pos;
+        }
+
+        private void GetLimitForPlayerMove()
+        {
+            float camHalfHeight = _camera.orthographicSize;
+            float camHalfWidth = camHalfHeight * _camera.aspect;
+
+            Vector3 camPos = _camera.transform.position;
+
+            float charRadius = _characterController.radius;
+
+            float leftLimit = camPos.x - camHalfWidth + charRadius;
+            float rightLimit = camPos.x + camHalfWidth - charRadius;
+            float bottomLimit = camPos.z - camHalfHeight + charRadius;
+            float topLimit = camPos.z + camHalfHeight - charRadius;
+
+            _horizontalLimit = new Vector2(leftLimit, rightLimit);
+            _verticalLimit = new Vector2(bottomLimit, topLimit);
         }
     }
 }
