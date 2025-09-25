@@ -5,11 +5,13 @@ using UnityEngine;
 
 namespace Game
 {
+    [RequireComponent(typeof(CharacterController))]
     public class Character : MonoBehaviour, ITarget, IDamageble
     {
         [SerializeField] private float _moveSpeed = 5f;
         [SerializeField] private int _health = 5;
-        [SerializeField] private CapsuleCollider _capsuleCollider;
+
+        private CharacterController _characterController;
 
         private HealthHandler _healthHandler;
         private DirectionMoveComponent _directionMoveComponent;
@@ -21,9 +23,10 @@ namespace Game
 
         public void Init(IInputService inputService, Camera mainCamera)
         {
+            _characterController = GetComponent<CharacterController>();
             _inputService = inputService;
 
-            _directionMoveComponent = new(inputService, transform, mainCamera, _capsuleCollider.radius);
+            _directionMoveComponent = new(inputService, _characterController, mainCamera);
             _trasformRotator = new(transform, inputService);
 
             _healthHandler = new(_health);
@@ -31,8 +34,13 @@ namespace Game
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Enemy has trigger!");
+            Debug.Log("Player has trigger!");
             //damageble.GetDamage(_damageAmount);
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            Debug.Log($"Player has collision {collision.gameObject.name}!");
         }
 
         private void OnDestroy()

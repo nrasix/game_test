@@ -2,7 +2,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
 
 namespace Game.Enemies
 {
@@ -35,13 +34,14 @@ namespace Game.Enemies
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.transform != _targetObject)
+            Debug.Log("Enemy has trigger!");
+
+            /*if (other.transform != _targetObject)
                 return;
 
-            if(!other.transform.TryGetComponent<IDamageble>(out var damageble))
-                return;
+            if (!other.transform.TryGetComponent<IDamageble>(out var damageble))
+                return;*/
 
-            Debug.Log("Player has trigger!");
             //damageble.GetDamage(_damageAmount);
         }
 
