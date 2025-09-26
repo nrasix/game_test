@@ -59,5 +59,13 @@ namespace Game.Services.Input
                 OnTouchScreen?.Invoke(worldPoint);
             }
         }
+
+        public void SetGameInput(bool value)
+        {
+            if (value)
+                _inputActions.Player.Enable();
+            else
+                _inputActions.Player.Disable();
+        }
     }
 }

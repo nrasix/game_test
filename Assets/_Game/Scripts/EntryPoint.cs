@@ -32,7 +32,7 @@ namespace Game.Services
             _enemyService.Init(_mainCamera, _character);
 
             _healthView.Init(_character.HealthView);
-            _looseCanvas.Init(_character);
+            _looseCanvas.Init(_character, inputService);
         }
 
         public void Start()
