@@ -39,6 +39,9 @@ namespace Game.Enemies
         {
             IsDead = false;
             _healthHandler.AddHealth(_healthAmount);
+            _moveToTargetComponent.OnTouchWithPlayer(false);
+
+            gameObject.SetActive(true);
         }
 
         private void Update()
@@ -80,6 +83,7 @@ namespace Game.Enemies
             {
                 IsDead = true;
                 OnEnemyDied?.Invoke(this);
+                gameObject.SetActive(false);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Game.Services.Character;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,10 @@ namespace Game
         [SerializeField] private int _countEnemyForSpawn = 15;
         [SerializeField] private BaseEnemy _enemy;
 
+        [Space(5)]
+        [SerializeField] private int _minSecondToRespawn = 3;
+        [SerializeField] private int _maxSecondToRespawn = 8;
+
         private Camera _mainCamera;
         private ITarget _target;
 
@@ -22,7 +27,7 @@ namespace Game
             _mainCamera = mainCamera;
             _target = target;
 
-            _enemyList = new(1);
+            _enemyList = new(_countEnemyForSpawn);
             SpawnEnemies();
         }
 
@@ -94,7 +99,18 @@ namespace Game
 
         private void OnEnemyDied(BaseEnemy enemy)
         {
-            // TODO: get new point and spawn
+            StartCoroutine(RespawnEnemy(enemy));
+        }
+
+        private IEnumerator RespawnEnemy(BaseEnemy enemy)
+        {
+            float randomTime = Random.Range(_minSecondToRespawn, _maxSecondToRespawn);
+
+            yield return new WaitForSeconds(randomTime);
+
+            var newSpawnPos = GetRandomSpawnPosition();
+            enemy.transform.position = newSpawnPos;
+            enemy.ResetEnemy();
         }
     }
 }
