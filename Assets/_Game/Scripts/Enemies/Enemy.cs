@@ -1,32 +1,66 @@
 ﻿using Game.Services.Character;
+using Game.Services.Character.Data;
 using System;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Game.Enemies
 {
-    public class Enemy : BaseEnemy
+    public class Enemy : BaseEnemy, IDamageble
     {
+        [SerializeField] private CharacterController _characterContoller;
+        [SerializeField] private Rigidbody _rigidbody;
+
+        [Space(5)]
         [SerializeField] private int _damageAmount = 1;
         [SerializeField] private int _moveSpeed = 2;
         [SerializeField] private int _rotateSpeed = 10;
-        [SerializeField] private float _minDistanceToTarget = 0.5f;
 
-        [SerializeField] private CharacterController _characterContoller;
+        [Space(5)]
+        [SerializeField] private int _healthAmount = 1;
 
         private ITarget _targetObject;
         private MoveToTargetComponent _moveToTargetComponent;
+        private HealthHandler _healthHandler;
 
-        public void Init(ITarget targetObject)
+        public override event Action<BaseEnemy> OnEnemyDied;
+
+        public bool IsDead { get; private set; }
+
+        public override void Init(ITarget targetObject)
         {
             _targetObject = targetObject;
 
-            _moveToTargetComponent = new MoveToTargetComponent(targetObject, _characterContoller, _moveSpeed, _rotateSpeed);
+            _healthHandler = new HealthHandler(_healthAmount, _healthAmount);
+
+            _moveToTargetComponent = new MoveToTargetComponent
+                (targetObject, _characterContoller, _moveSpeed, _rotateSpeed, _rigidbody);
+        }
+
+        public override void ResetEnemy()
+        {
+            IsDead = false;
+            _healthHandler.AddHealth(_healthAmount);
         }
 
         private void Update()
         {
-            _moveToTargetComponent.Update();
+            if (IsDead || _moveToTargetComponent == null)
+                return;
+
+            //_moveToTargetComponent.Update();
+        }
+
+        private void FixedUpdate()
+        {
+            _moveToTargetComponent.FixedUpdate();
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (collision.transform != _targetObject.Transform)
+                return;
+
+            Debug.Log("Enemy has collision with player");
         }
 
         private void OnTriggerEnter(Collider other)
@@ -48,57 +82,19 @@ namespace Game.Enemies
 
             _moveToTargetComponent.OnTouchWithPlayer(false);
         }
-    }
 
-    public class MoveToTargetComponent
-    {
-        private readonly ITarget _target;
-        private CharacterController _characterContoller;
-
-        private bool _isTouchingPlayer;
-        private int _moveSpeed;
-        private int _speedRotate;
-
-        public MoveToTargetComponent(
-            ITarget target,
-            CharacterController characterContoller,
-            int moveSpeed,
-            int speedRotate)
+        public void GetDamage(int damage)
         {
-            _target = target;
-            _characterContoller = characterContoller;
-
-            _moveSpeed = moveSpeed;
-            _speedRotate = speedRotate;
-        }
-
-        public void Update()
-        {
-            if (_isTouchingPlayer)
+            if (IsDead)
                 return;
 
-            if (_target == null)
-                return;
+            _healthHandler.SubjectHealth(damage);
 
-            Vector3 direction = (_target.Transform.position - _characterContoller.transform.position).normalized;
-            if (direction == Vector3.zero)
-                return;
-
-            Vector3 move = direction * _moveSpeed * Time.deltaTime;
-            _characterContoller.Move(move);
-
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            _characterContoller.transform.rotation = 
-                Quaternion.Slerp(
-                    _characterContoller.transform.rotation, 
-                    targetRotation, 
-                    Time.deltaTime * _speedRotate
-                );
-        }
-
-        public void OnTouchWithPlayer(bool value)
-        {
-            _isTouchingPlayer = value;
+            if (_healthHandler.Health == 0)
+            {
+                IsDead = true;
+                OnEnemyDied?.Invoke(this);
+            }
         }
     }
 }
