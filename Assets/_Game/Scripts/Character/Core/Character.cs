@@ -26,10 +26,10 @@ namespace Game
             _characterController = GetComponent<CharacterController>();
             _inputService = inputService;
 
-            _directionMoveComponent = new(inputService, _characterController, mainCamera);
+            _directionMoveComponent = new(inputService, _characterController, mainCamera, _moveSpeed);
             _trasformRotator = new(transform, inputService);
 
-            _healthHandler = new(_health);
+            _healthHandler = new(_health, _health);
         }
 
         private void OnDestroy()

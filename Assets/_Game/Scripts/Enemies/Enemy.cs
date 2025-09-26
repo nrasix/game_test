@@ -8,7 +8,6 @@ namespace Game.Enemies
     public class Enemy : BaseEnemy, IDamageble
     {
         [SerializeField] private CharacterController _characterContoller;
-        [SerializeField] private Rigidbody _rigidbody;
 
         [Space(5)]
         [SerializeField] private int _damageAmount = 1;
@@ -33,7 +32,7 @@ namespace Game.Enemies
             _healthHandler = new HealthHandler(_healthAmount, _healthAmount);
 
             _moveToTargetComponent = new MoveToTargetComponent
-                (targetObject, _characterContoller, _moveSpeed, _rotateSpeed, _rigidbody);
+                (targetObject, _characterContoller, _moveSpeed, _rotateSpeed);
         }
 
         public override void ResetEnemy()
@@ -47,20 +46,7 @@ namespace Game.Enemies
             if (IsDead || _moveToTargetComponent == null)
                 return;
 
-            //_moveToTargetComponent.Update();
-        }
-
-        private void FixedUpdate()
-        {
-            _moveToTargetComponent.FixedUpdate();
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            if (collision.transform != _targetObject.Transform)
-                return;
-
-            Debug.Log("Enemy has collision with player");
+            _moveToTargetComponent.Update();
         }
 
         private void OnTriggerEnter(Collider other)

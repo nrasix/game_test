@@ -6,7 +6,7 @@ namespace Game
 {
     public class DirectionMoveComponent : IDisposable
     {
-        private float _moveSpeed = 5f;
+        private float _moveSpeed;
 
         private readonly IInputService _inputService;
         private readonly CharacterController _characterController;
@@ -16,11 +16,17 @@ namespace Game
         private Vector2 _horizontalLimit;
         private Vector2 _verticalLimit;
 
-        public DirectionMoveComponent(IInputService inputService, CharacterController characterController, Camera camera)
+        public DirectionMoveComponent(
+            IInputService inputService,
+            CharacterController characterController,
+            Camera camera,
+            float moveSpeed)
         {
             _inputService = inputService;
             _characterController = characterController;
             _camera = camera;
+
+            _moveSpeed = moveSpeed;
 
             _inputService.OnMove += OnMoveInput;
 
