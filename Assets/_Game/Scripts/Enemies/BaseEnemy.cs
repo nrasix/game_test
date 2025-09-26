@@ -6,6 +6,5 @@ namespace Game
 {
     public abstract class BaseEnemy : MonoBehaviour
     {
-        [SerializeField] protected NavMeshAgent _navMeshAgent;
     }
 }

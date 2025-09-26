@@ -32,17 +32,6 @@ namespace Game
             _healthHandler = new(_health);
         }
 
-        private void OnTriggerEnter(Collider other)
-        {
-            Debug.Log("Player has trigger!");
-            //damageble.GetDamage(_damageAmount);
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            Debug.Log($"Player has collision {collision.gameObject.name}!");
-        }
-
         private void OnDestroy()
         {
             _directionMoveComponent.Dispose();

@@ -8,8 +8,11 @@ namespace Game.Enemies
     public class Enemy : BaseEnemy
     {
         [SerializeField] private int _damageAmount = 1;
-        [SerializeField] private int _moveSpeed = 3;
+        [SerializeField] private int _moveSpeed = 2;
+        [SerializeField] private int _rotateSpeed = 10;
         [SerializeField] private float _minDistanceToTarget = 0.5f;
+
+        [SerializeField] private CharacterController _characterContoller;
 
         private ITarget _targetObject;
         private MoveToTargetComponent _moveToTargetComponent;
@@ -18,13 +21,7 @@ namespace Game.Enemies
         {
             _targetObject = targetObject;
 
-            _moveToTargetComponent = new MoveToTargetComponent(targetObject, _navMeshAgent, transform);
-            _moveToTargetComponent.OnCollisionTarget += OnCollisionTarget;
-        }
-
-        private void OnDestroy()
-        {
-            _moveToTargetComponent.OnCollisionTarget -= OnCollisionTarget;
+            _moveToTargetComponent = new MoveToTargetComponent(targetObject, _characterContoller, _moveSpeed, _rotateSpeed);
         }
 
         private void Update()
@@ -34,41 +31,45 @@ namespace Game.Enemies
 
         private void OnTriggerEnter(Collider other)
         {
-            Debug.Log("Enemy has trigger!");
-
-            /*if (other.transform != _targetObject)
+            if (other.transform != _targetObject.Transform)
                 return;
 
             if (!other.transform.TryGetComponent<IDamageble>(out var damageble))
-                return;*/
-
-            //damageble.GetDamage(_damageAmount);
-        }
-
-        private void OnCollisionTarget()
-        {
-            /*if (!_targetObject.Transform.TryGetComponent<IDamageble>(out var damageble))
                 return;
 
-            damageble.GetDamage(_damageAmount);*/
+            _moveToTargetComponent.OnTouchWithPlayer(true);
+            damageble.GetDamage(_damageAmount);
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.transform != _targetObject.Transform)
+                return;
+
+            _moveToTargetComponent.OnTouchWithPlayer(false);
         }
     }
 
     public class MoveToTargetComponent
     {
-        private Transform _currentTransform;
         private readonly ITarget _target;
-        private NavMeshAgent _navMeshAgent;
+        private CharacterController _characterContoller;
 
         private bool _isTouchingPlayer;
+        private int _moveSpeed;
+        private int _speedRotate;
 
-        public event Action OnCollisionTarget;
-
-        public MoveToTargetComponent(ITarget target, NavMeshAgent navMeshAgent, Transform currentTransform)
+        public MoveToTargetComponent(
+            ITarget target,
+            CharacterController characterContoller,
+            int moveSpeed,
+            int speedRotate)
         {
             _target = target;
-            _navMeshAgent = navMeshAgent;
-            _currentTransform = currentTransform;
+            _characterContoller = characterContoller;
+
+            _moveSpeed = moveSpeed;
+            _speedRotate = speedRotate;
         }
 
         public void Update()
@@ -76,16 +77,28 @@ namespace Game.Enemies
             if (_isTouchingPlayer)
                 return;
 
-            if (_target != null)
-            {
-                _navMeshAgent.SetDestination(_target.Transform.position);
+            if (_target == null)
+                return;
 
-                /*if (Vector3.Distance(_currentTransform.position, _target.Transform.position) <= 0.25f)
-                {
-                    _isTouchingPlayer = true;
-                    OnCollisionTarget?.Invoke();
-                }*/
-            }
+            Vector3 direction = (_target.Transform.position - _characterContoller.transform.position).normalized;
+            if (direction == Vector3.zero)
+                return;
+
+            Vector3 move = direction * _moveSpeed * Time.deltaTime;
+            _characterContoller.Move(move);
+
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            _characterContoller.transform.rotation = 
+                Quaternion.Slerp(
+                    _characterContoller.transform.rotation, 
+                    targetRotation, 
+                    Time.deltaTime * _speedRotate
+                );
+        }
+
+        public void OnTouchWithPlayer(bool value)
+        {
+            _isTouchingPlayer = value;
         }
     }
 }
