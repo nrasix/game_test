@@ -1,6 +1,7 @@
 ﻿using Game.Services.Character;
 using Game.Services.Character.Data;
 using Game.Services.Input;
+using System;
 using UnityEngine;
 
 namespace Game
@@ -17,10 +18,14 @@ namespace Game
         private DirectionMoveComponent _directionMoveComponent;
         private TransformRotator _trasformRotator;
 
+        public bool IsDead => _healthHandler.Health == 0;
+
         private IInputService _inputService;
 
         public IHealthView HealthView => _healthHandler;
         public Transform Transform => transform;
+
+        public event Action OnLooseGame;
 
         public void Init(IInputService inputService, Camera mainCamera)
         {
@@ -41,8 +46,14 @@ namespace Game
 
         public void GetDamage(int damage)
         {
+            if (IsDead)
+                return;
+
             Debug.Log("Player is get damage!");
             _healthHandler.SubjectHealth(damage);
+
+            if (IsDead)
+                OnLooseGame?.Invoke();
         }
     }
 }

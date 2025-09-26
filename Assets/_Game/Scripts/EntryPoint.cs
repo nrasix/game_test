@@ -15,6 +15,7 @@ namespace Game.Services
 
         [Header("UI")]
         [SerializeField] private HealthView _healthView;
+        [SerializeField] private LooseCanvas _looseCanvas;
 
         private HashSet<IInitializable> _initializables = new();
         private HashSet<IDisposable> _disposables = new();
@@ -31,6 +32,7 @@ namespace Game.Services
             _enemyService.Init(_mainCamera, _character);
 
             _healthView.Init(_character.HealthView);
+            _looseCanvas.Init(_character);
         }
 
         public void Start()
