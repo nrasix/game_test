@@ -2,7 +2,7 @@
 
 namespace Game.Services.Character.Data
 {
-    public sealed class HealthHandler
+    public sealed class HealthHandler : IHealthView
     {
         private int _health;
         private int _maxHealth;
@@ -16,6 +16,8 @@ namespace Game.Services.Character.Data
                 OnHealthChanged?.Invoke(_health);
             }
         }
+
+        public int MaxHealth => _maxHealth;
 
         public event Action<int> OnHealthChanged;
         public event Action OnDead;
@@ -55,5 +57,12 @@ namespace Game.Services.Character.Data
                 Health += health;
             }
         }
+    }
+
+    public interface IHealthView
+    {
+        int Health { get; }
+        int MaxHealth { get; }
+        event Action<int> OnHealthChanged;
     }
 }

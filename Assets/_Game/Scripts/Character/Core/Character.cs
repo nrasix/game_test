@@ -19,6 +19,7 @@ namespace Game
 
         private IInputService _inputService;
 
+        public IHealthView HealthView => _healthHandler;
         public Transform Transform => transform;
 
         public void Init(IInputService inputService, Camera mainCamera)
@@ -41,7 +42,7 @@ namespace Game
         public void GetDamage(int damage)
         {
             Debug.Log("Player is get damage!");
-            _healthHandler.SubjectHealth(_health);
+            _healthHandler.SubjectHealth(damage);
         }
     }
 }

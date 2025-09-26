@@ -13,16 +13,15 @@ namespace Game.Services
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private EnemySpawner _enemyService;
 
-        private HashSet<IInitializable> _initializables;
-        private HashSet<IDisposable> _disposables;
-        private HashSet<IFixedUpdatable> _fixedUpdatables;
+        [Header("UI")]
+        [SerializeField] private HealthView _healthView;
+
+        private HashSet<IInitializable> _initializables = new();
+        private HashSet<IDisposable> _disposables = new();
+        private HashSet<IFixedUpdatable> _fixedUpdatables = new();
 
         public void Awake()
         {
-            _initializables = new();
-            _disposables = new();
-            _fixedUpdatables = new();
-
             var inputService = new InputService(_mainCamera, _groundLayer);
             _initializables.Add(inputService);
             _disposables.Add(inputService);
@@ -30,6 +29,8 @@ namespace Game.Services
 
             _character.Init(inputService, _mainCamera);
             _enemyService.Init(_mainCamera, _character);
+
+            _healthView.Init(_character.HealthView);
         }
 
         public void Start()
