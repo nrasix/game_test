@@ -1,5 +1,6 @@
 using Game.Services.Input;
 using Game.Utilities;
+using Game.Weapons;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace Game.Services
 
         [Space(5)]
         [SerializeField] private List<WeaponSpawnSettings> _weaponList;
+        [SerializeField] private Bullet _prefabBullet;
 
         [Header("UI")]
         [SerializeField] private HealthView _healthView;
@@ -31,7 +33,7 @@ namespace Game.Services
             _disposables.Add(inputService);
             _fixedUpdatables.Add(inputService);
 
-            _character.Init(inputService, _mainCamera, _weaponList);
+            _character.Init(inputService, _mainCamera, _weaponList, _prefabBullet, 20);
             _enemyService.Init(_mainCamera, _character);
 
             _healthView.Init(_character.HealthView);

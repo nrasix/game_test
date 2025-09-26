@@ -15,6 +15,7 @@ namespace Game.Services.Input
         public event Action<Vector3> OnMove;
         public event Action<Vector3> OnTouchScreen;
         public event Action OnAttack;
+        public event Action OnSwitchWeapon;
 
         public InputService(Camera camera, LayerMask groundLayer)
         {
@@ -29,11 +30,13 @@ namespace Game.Services.Input
             _inputActions.Enable();
 
             _inputActions.Player.Attack.performed += OnAttackCallback;
+            _inputActions.Player.SwitchWeapon.performed += SwitchWeapon;
         }
 
         public void Dispose()
         {
             _inputActions.Player.Attack.performed -= OnAttackCallback;
+            _inputActions.Player.SwitchWeapon.performed -= SwitchWeapon;
 
             _inputActions.Dispose();
         }
@@ -62,6 +65,8 @@ namespace Game.Services.Input
 
             OnAttack?.Invoke();
         }
+
+        private void SwitchWeapon(InputAction.CallbackContext value) => OnSwitchWeapon?.Invoke();
 
         public void SetGameInput(bool value)
         {

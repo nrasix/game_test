@@ -1,6 +1,7 @@
 ﻿using Game.Services.Character;
 using Game.Services.Character.Data;
 using Game.Services.Input;
+using Game.Weapons;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +34,9 @@ namespace Game
         public void Init(
             IInputService inputService,
             Camera mainCamera,
-            IReadOnlyList<WeaponSpawnSettings> _prefabsWeapon)
+            IReadOnlyList<WeaponSpawnSettings> _prefabsWeapon,
+            Bullet prefabBullet,
+            int sizePoolBullet)
         {
             _characterController = GetComponent<CharacterController>();
             _inputService = inputService;
@@ -41,7 +44,7 @@ namespace Game
             _directionMoveComponent = new(inputService, _characterController, mainCamera, _moveSpeed);
             _trasformRotator = new(transform, inputService);
 
-            _weaponSystem = new(_posSpawnWeapon, inputService, _prefabsWeapon);
+            _weaponSystem = new(_posSpawnWeapon, inputService, _prefabsWeapon, prefabBullet, sizePoolBullet);
 
             _healthHandler = new(_health, _health);
         }
