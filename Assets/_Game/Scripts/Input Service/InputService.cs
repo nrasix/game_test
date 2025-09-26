@@ -14,6 +14,7 @@ namespace Game.Services.Input
 
         public event Action<Vector3> OnMove;
         public event Action<Vector3> OnTouchScreen;
+        public event Action OnAttack;
 
         public InputService(Camera camera, LayerMask groundLayer)
         {
@@ -27,12 +28,12 @@ namespace Game.Services.Input
         {
             _inputActions.Enable();
 
-            _inputActions.Player.Attack.performed += OnAttack;
+            _inputActions.Player.Attack.performed += OnAttackCallback;
         }
 
         public void Dispose()
         {
-            _inputActions.Player.Attack.performed -= OnAttack;
+            _inputActions.Player.Attack.performed -= OnAttackCallback;
 
             _inputActions.Dispose();
         }
@@ -47,7 +48,7 @@ namespace Game.Services.Input
             OnMove?.Invoke(moveVector);
         }
 
-        private void OnAttack(InputAction.CallbackContext context)
+        private void OnAttackCallback(InputAction.CallbackContext context)
         {
             var mousePos2D = _inputActions.Player.Point.ReadValue<Vector2>();
 
@@ -58,6 +59,8 @@ namespace Game.Services.Input
                 Vector3 worldPoint = hitPoint.point;
                 OnTouchScreen?.Invoke(worldPoint);
             }
+
+            OnAttack?.Invoke();
         }
 
         public void SetGameInput(bool value)

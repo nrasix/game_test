@@ -13,6 +13,9 @@ namespace Game.Services
         [SerializeField] private LayerMask _groundLayer;
         [SerializeField] private EnemySpawner _enemyService;
 
+        [Space(5)]
+        [SerializeField] private List<WeaponSpawnSettings> _weaponList;
+
         [Header("UI")]
         [SerializeField] private HealthView _healthView;
         [SerializeField] private LooseCanvas _looseCanvas;
@@ -28,7 +31,7 @@ namespace Game.Services
             _disposables.Add(inputService);
             _fixedUpdatables.Add(inputService);
 
-            _character.Init(inputService, _mainCamera);
+            _character.Init(inputService, _mainCamera, _weaponList);
             _enemyService.Init(_mainCamera, _character);
 
             _healthView.Init(_character.HealthView);

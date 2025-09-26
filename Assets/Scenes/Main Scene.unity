@@ -1106,6 +1106,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moveSpeed: 5
   _health: 5
+  _posSpawnWeapon: {fileID: 1735236179}
 --- !u!143 &1280209709
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1275,6 +1276,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _enemyService: {fileID: 2102790941}
+  _weaponList:
+  - _weapon: {fileID: 4416681742223133453, guid: b1340ed9f5ec98646b8174a5958405a8, type: 3}
+    <SpawnPosition>k__BackingField: {x: 0, y: 0, z: 0.25}
+  - _weapon: {fileID: 7202511004254032422, guid: 87dae48b5d9891e4c8ac0a89cbc0f75e, type: 3}
+    <SpawnPosition>k__BackingField: {x: -0.25, y: 0, z: 0.25}
   _healthView: {fileID: 1016611021}
   _looseCanvas: {fileID: 125495299}
 --- !u!4 &1336711898

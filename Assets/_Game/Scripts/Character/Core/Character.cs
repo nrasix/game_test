@@ -2,6 +2,7 @@
 using Game.Services.Character.Data;
 using Game.Services.Input;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game
@@ -11,12 +12,14 @@ namespace Game
     {
         [SerializeField] private float _moveSpeed = 5f;
         [SerializeField] private int _health = 5;
+        [SerializeField] private Transform _posSpawnWeapon;
 
         private CharacterController _characterController;
 
         private HealthHandler _healthHandler;
         private DirectionMoveComponent _directionMoveComponent;
         private TransformRotator _trasformRotator;
+        private WeaponSystem _weaponSystem;
 
         public bool IsDead => _healthHandler.Health == 0;
 
@@ -27,13 +30,18 @@ namespace Game
 
         public event Action OnLooseGame;
 
-        public void Init(IInputService inputService, Camera mainCamera)
+        public void Init(
+            IInputService inputService,
+            Camera mainCamera,
+            IReadOnlyList<WeaponSpawnSettings> _prefabsWeapon)
         {
             _characterController = GetComponent<CharacterController>();
             _inputService = inputService;
 
             _directionMoveComponent = new(inputService, _characterController, mainCamera, _moveSpeed);
             _trasformRotator = new(transform, inputService);
+
+            _weaponSystem = new(_posSpawnWeapon, inputService, _prefabsWeapon);
 
             _healthHandler = new(_health, _health);
         }
