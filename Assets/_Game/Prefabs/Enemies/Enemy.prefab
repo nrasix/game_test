@@ -154,11 +154,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8106ddeebb7ff84a8a3572da3ff4660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _healthAmount: 1
   _characterContoller: {fileID: 8413390170844192561}
   _damageAmount: 1
-  _moveSpeed: 1
+  _moveSpeed: 2
   _rotateSpeed: 10
-  _healthAmount: 1
 --- !u!143 &8413390170844192561
 CharacterController:
   m_ObjectHideFlags: 0

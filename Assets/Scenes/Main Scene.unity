@@ -1973,12 +1973,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _distanceToSpawn: 5
   _spawnOffset: 2
-  _countEnemyForSpawn: 20
   _enemySpawnSettings:
   - <Enemy>k__BackingField: {fileID: 7214525072600617252, guid: 689068fd4c0249f43bdf7a58d0b4cd0a, type: 3}
     <CountSpawn>k__BackingField: 15
   - <Enemy>k__BackingField: {fileID: 7331653635119860653, guid: 8bd0a857872be524a921818290254572, type: 3}
-    <CountSpawn>k__BackingField: 5
+    <CountSpawn>k__BackingField: 1
   _minSecondToRespawn: 3
   _maxSecondToRespawn: 8
   _minDistanceBetweenEnemies: 8

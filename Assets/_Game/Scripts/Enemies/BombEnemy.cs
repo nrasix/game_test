@@ -1,6 +1,7 @@
 ﻿using Game.Services.Character;
 using Game.Services.Character.Data;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Enemies
@@ -22,7 +23,8 @@ namespace Game.Enemies
         private bool _isDetonating = false;
         private float _detonationTimer = 0f;
 
-        private Collider[] _colliderCashe = new Collider[64];
+        private Collider[] _colliderCashe = new Collider[32];
+        private HashSet<IDamageble> _explodeObject = new(32);
 
         private ITarget _targetObject;
         private MoveToTargetComponent _moveToTargetComponent;
@@ -90,16 +92,18 @@ namespace Game.Enemies
             for (int i = 0; i < amountCollider; i++)
             {
                 var collider = _colliderCashe[i];
-                if (collider == null)
+
+                if (collider.transform == transform)
                     continue;
 
-                if (collider.TryGetComponent<IDamageble>(out var damageable))
-                {
-                    damageable.GetDamage(_damageAmount);
-                }
+                if (!collider.TryGetComponent<IDamageble>(out var damageable))
+                    continue;
 
-                _colliderCashe[i] = null;
+                if (_explodeObject.Add(damageable))
+                    damageable.GetDamage(_damageAmount);
             }
+
+            _explodeObject.Clear();
 
             Debug.Log("Bomb enemy invoke explode!");
 

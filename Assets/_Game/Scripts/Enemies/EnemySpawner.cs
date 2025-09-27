@@ -38,11 +38,6 @@ namespace Game
             SpawnEnemies();
         }
 
-        private void OnDestroy()
-        {
-            Dispose();
-        }
-
         private void SpawnEnemies()
         {
             for (int i = 0, count = _enemySpawnSettings.Count; i < count; i++)
