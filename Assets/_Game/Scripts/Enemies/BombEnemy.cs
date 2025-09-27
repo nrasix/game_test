@@ -90,10 +90,15 @@ namespace Game.Enemies
             for (int i = 0; i < amountCollider; i++)
             {
                 var collider = _colliderCashe[i];
+                if (collider == null)
+                    continue;
+
                 if (collider.TryGetComponent<IDamageble>(out var damageable))
                 {
                     damageable.GetDamage(_damageAmount);
                 }
+
+                _colliderCashe[i] = null;
             }
 
             Debug.Log("Bomb enemy invoke explode!");
