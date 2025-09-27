@@ -182,11 +182,11 @@ MonoBehaviour:
   _healthAmount: 1
   _characterContoller: {fileID: 8413390170844192561}
   _damageAmount: 1
-  _moveSpeed: 4
+  _moveSpeed: 5
   _rotateSpeed: 10
-  _explosionRadius: 2
-  _detonationDistance: 1.5
-  _detonationDelay: 0.5
+  _explosionRadius: 3
+  _detonationDistance: 2
+  _detonationDelay: 1
 --- !u!1 &7573982316201662399
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,7 +15,6 @@ namespace Game
         private float _distanceToSpawn = 5;
         [SerializeField] private float _spawnOffset = 2f;
 
-        [SerializeField] private int _countEnemyForSpawn = 15;
         [SerializeField] private List<EnemySpawnSettings> _enemySpawnSettings;
 
         [Space(5)]
@@ -35,7 +34,7 @@ namespace Game
             _mainCamera = mainCamera;
             _target = target;
 
-            _enemyList = new(_countEnemyForSpawn);
+            _enemyList = new();
             SpawnEnemies();
         }
 

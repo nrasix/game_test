@@ -8,7 +8,7 @@ namespace Game.Enemies
         private readonly ITarget _target;
         private readonly CharacterController _characterContoller;
 
-        private bool _isCanMove;
+        private bool _isCanMove = true;
         private int _moveSpeed;
         private int _speedRotate;
 
