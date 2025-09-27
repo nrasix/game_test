@@ -16,7 +16,7 @@ namespace Game
         [SerializeField] private float _spawnOffset = 2f;
 
         [SerializeField] private int _countEnemyForSpawn = 15;
-        [SerializeField] private BaseEnemy _enemy;
+        [SerializeField] private List<EnemySpawnSettings> _enemySpawnSettings;
 
         [Space(5)]
         [SerializeField] private int _minSecondToRespawn = 3;
@@ -46,15 +46,20 @@ namespace Game
 
         private void SpawnEnemies()
         {
-            for (int i = 0; i < _countEnemyForSpawn; i++)
+            for (int i = 0, count = _enemySpawnSettings.Count; i < count; i++)
             {
-                var enemy = Instantiate(_enemy, transform);
-                enemy.Init(_target);
-                var randomPosition = GetRandomSpawnPosition();
-                enemy.transform.position = randomPosition;
-                enemy.OnEnemyDied += OnEnemyDied;
+                var spawnSettings = _enemySpawnSettings[i];
 
-                _enemyList.Add(enemy);
+                for (int j = 0, amountSpawn = spawnSettings.CountSpawn; j < amountSpawn; j++)
+                {
+                    var enemy = Instantiate(spawnSettings.Enemy, transform);
+                    enemy.Init(_target);
+                    var randomPosition = GetRandomSpawnPosition();
+                    enemy.transform.position = randomPosition;
+                    enemy.OnEnemyDied += OnEnemyDied;
+
+                    _enemyList.Add(enemy);
+                }
             }
         }
 

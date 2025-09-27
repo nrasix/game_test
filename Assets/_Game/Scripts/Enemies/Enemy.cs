@@ -14,9 +14,6 @@ namespace Game.Enemies
         [SerializeField] private int _moveSpeed = 2;
         [SerializeField] private int _rotateSpeed = 10;
 
-        [Space(5)]
-        [SerializeField] private int _healthAmount = 1;
-
         private ITarget _targetObject;
         private MoveToTargetComponent _moveToTargetComponent;
         private HealthHandler _healthHandler;
@@ -39,7 +36,7 @@ namespace Game.Enemies
         {
             IsDead = false;
             _healthHandler.AddHealth(_healthAmount);
-            _moveToTargetComponent.OnTouchWithPlayer(false);
+            _moveToTargetComponent.SetStateMove(true);
 
             gameObject.SetActive(true);
         }
@@ -60,7 +57,7 @@ namespace Game.Enemies
             if (!other.transform.TryGetComponent<IDamageble>(out var damageble))
                 return;
 
-            _moveToTargetComponent.OnTouchWithPlayer(true);
+            _moveToTargetComponent.SetStateMove(false);
             damageble.GetDamage(_damageAmount);
         }
 
@@ -69,7 +66,7 @@ namespace Game.Enemies
             if (other.transform != _targetObject.Transform)
                 return;
 
-            _moveToTargetComponent.OnTouchWithPlayer(false);
+            _moveToTargetComponent.SetStateMove(true);
         }
 
         public void GetDamage(int damage)

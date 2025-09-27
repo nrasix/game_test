@@ -8,7 +8,7 @@ namespace Game.Enemies
         private readonly ITarget _target;
         private readonly CharacterController _characterContoller;
 
-        private bool _isTouchingPlayer;
+        private bool _isCanMove;
         private int _moveSpeed;
         private int _speedRotate;
 
@@ -30,7 +30,7 @@ namespace Game.Enemies
 
         public void Update()
         {
-            if (_isTouchingPlayer)
+            if (!_isCanMove)
                 return;
 
             if (_target == null)
@@ -52,9 +52,9 @@ namespace Game.Enemies
                 );
         }
 
-        public void OnTouchWithPlayer(bool value)
+        public void SetStateMove(bool value)
         {
-            _isTouchingPlayer = value;
+            _isCanMove = value;
         }
     }
 }
