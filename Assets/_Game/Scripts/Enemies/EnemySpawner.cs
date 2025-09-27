@@ -9,8 +9,11 @@ namespace Game
 {
     public class EnemySpawner : MonoBehaviour, IDisposable
     {
+        private const int MAX_ATTEMPT = 50;
+
         [SerializeField, Tooltip("Distance from camera to spawn Enemy in random point")]
         private float _distanceToSpawn = 5;
+        [SerializeField] private float _spawnOffset = 2f;
 
         [SerializeField] private int _countEnemyForSpawn = 15;
         [SerializeField] private BaseEnemy _enemy;
@@ -18,6 +21,9 @@ namespace Game
         [Space(5)]
         [SerializeField] private int _minSecondToRespawn = 3;
         [SerializeField] private int _maxSecondToRespawn = 8;
+
+        [Space(5)]
+        [SerializeField] private float _minDistanceBetweenEnemies = 5f;
 
         private Camera _mainCamera;
         private ITarget _target;
@@ -54,6 +60,21 @@ namespace Game
 
         private Vector3 GetRandomSpawnPosition()
         {
+            for (int i = 0; i < MAX_ATTEMPT; i++)
+            {
+                Vector3 position = GenerateRandomPosition();
+
+                if (!IsPositionValid(position))
+                    continue;
+
+                return position;
+            }
+
+            return GenerateRandomPosition();
+        }
+
+        private Vector3 GenerateRandomPosition()
+        {
             float halfHeight = _mainCamera.orthographicSize;
             float halfWidth = halfHeight * _mainCamera.aspect;
 
@@ -68,31 +89,53 @@ namespace Game
 
             float x, z;
 
+            float randomOffset = Random.Range(-_spawnOffset, _spawnOffset);
+
             switch (side)
             {
                 case 0:
                     x = Random.Range(left, right);
-                    z = top + _distanceToSpawn;
+                    z = top + _distanceToSpawn + randomOffset;
                     break;
                 case 1:
                     x = Random.Range(left, right);
-                    z = bottom - _distanceToSpawn;
+                    z = bottom - _distanceToSpawn + randomOffset;
                     break;
                 case 2:
-                    x = left - _distanceToSpawn;
+                    x = left - _distanceToSpawn + randomOffset;
                     z = Random.Range(bottom, top);
                     break;
                 case 3:
-                    x = right + _distanceToSpawn;
+                    x = right + _distanceToSpawn + randomOffset;
                     z = Random.Range(bottom, top);
                     break;
                 default:
-                    x = cameraPos.x;
-                    z = cameraPos.z;
+                    x = cameraPos.x + Random.Range(-2f, 2f);
+                    z = cameraPos.z + Random.Range(-2f, 2f);
                     break;
             }
 
             return new Vector3(x, 1f, z);
+        }
+
+        private bool IsPositionValid(Vector3 position)
+        {
+            if (_enemyList == null || _enemyList.Count == 0)
+                return true;
+
+            for (int i = 0, count = _enemyList.Count; i < count; i++)
+            {
+                var enemy = _enemyList[i];
+
+                if (enemy == null)
+                    continue;
+
+                float distance = Vector3.Distance(position, enemy.transform.position);
+                if (_minDistanceBetweenEnemies > distance)
+                    return false;
+            }
+
+            return true;
         }
 
         private void OnEnemyDied(BaseEnemy enemy)
@@ -113,6 +156,8 @@ namespace Game
 
         public void Dispose()
         {
+            StopAllCoroutines();
+
             if (_enemyList != null && _enemyList.Count > 0)
             {
                 for (int i = 0, count = _enemyList.Count; i < count; i++)
@@ -128,8 +173,6 @@ namespace Game
             _enemyList = null;
 
             _target = null;
-
-            StopAllCoroutines();
         }
     }
 }

@@ -57,8 +57,8 @@ namespace Game.Services
             _character = Instantiate(_characterPrefab, _spawnCharacterPosition, Quaternion.identity);
             _character.Init(inputService, _mainCamera, _weaponList, _prefabBullet, 20, _healthHandler);
 
-            _enemyService.Init(_mainCamera, _character);
-            _disposables.Add(_enemyService);
+            /*_enemyService.Init(_mainCamera, _character);
+            _disposables.Add(_enemyService);*/
 
             _healthView.Init(_healthHandler);
             _disposables.Add(_healthView);

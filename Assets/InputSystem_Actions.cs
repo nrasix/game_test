@@ -382,7 +382,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""886e731e-7071-4ae4-95c0-e61739dad6fd"",
-                    ""path"": ""<Touchscreen>/primaryTouch/tap"",
+                    ""path"": ""<Touchscreen>/Press"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Touch"",
@@ -491,11 +491,11 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""0a8c3742-53c6-474a-8541-8fb7235000c1"",
-                    ""path"": ""<Touchscreen>/touch*/position"",
+                    ""id"": ""a7671688-bd4f-4055-baa3-18e1ffb4c77a"",
+                    ""path"": ""<Touchscreen>/primaryTouch/position"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Touch"",
+                    ""groups"": "";Touch"",
                     ""action"": ""Point"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

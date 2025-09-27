@@ -1972,10 +1972,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _distanceToSpawn: 5
-  _countEnemyForSpawn: 10
+  _spawnOffset: 2
+  _countEnemyForSpawn: 20
   _enemy: {fileID: 7214525072600617252, guid: 689068fd4c0249f43bdf7a58d0b4cd0a, type: 3}
   _minSecondToRespawn: 3
   _maxSecondToRespawn: 8
+  _minDistanceBetweenEnemies: 8
 --- !u!4 &2102790942
 Transform:
   m_ObjectHideFlags: 0
