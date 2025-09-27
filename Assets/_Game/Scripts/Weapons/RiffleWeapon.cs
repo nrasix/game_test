@@ -16,7 +16,9 @@ namespace Game
 
         public override void Shoot()
         {
-            Debug.Log("Shoot from Riffle Weapon!");
+            var bullet = _bullets.Get(true);
+            bullet.transform.position = _spawnBullet.position;
+            bullet.Init(_spawnBullet.forward);
         }
     }
 }

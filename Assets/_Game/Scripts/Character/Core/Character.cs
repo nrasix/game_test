@@ -12,7 +12,6 @@ namespace Game
     public class Character : MonoBehaviour, ITarget, IDamageble
     {
         [SerializeField] private float _moveSpeed = 5f;
-        [SerializeField] private int _health = 5;
         [SerializeField] private Transform _posSpawnWeapon;
 
         private CharacterController _characterController;
@@ -24,9 +23,6 @@ namespace Game
 
         public bool IsDead => _healthHandler.Health == 0;
 
-        private IInputService _inputService;
-
-        public IHealthView HealthView => _healthHandler;
         public Transform Transform => transform;
 
         public event Action OnLooseGame;
@@ -36,17 +32,17 @@ namespace Game
             Camera mainCamera,
             IReadOnlyList<WeaponSpawnSettings> _prefabsWeapon,
             Bullet prefabBullet,
-            int sizePoolBullet)
+            int sizePoolBullet,
+            HealthHandler healthHandler)
         {
             _characterController = GetComponent<CharacterController>();
-            _inputService = inputService;
 
             _directionMoveComponent = new(inputService, _characterController, mainCamera, _moveSpeed);
             _trasformRotator = new(transform, inputService);
 
             _weaponSystem = new(_posSpawnWeapon, inputService, _prefabsWeapon, prefabBullet, sizePoolBullet);
 
-            _healthHandler = new(_health, _health);
+            _healthHandler = healthHandler;
         }
 
         private void OnDestroy()

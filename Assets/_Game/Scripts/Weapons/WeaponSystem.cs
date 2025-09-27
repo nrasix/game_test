@@ -72,7 +72,8 @@ namespace Game
 
         private void OnAttack()
         {
-            _currentWeapon.Shoot();
+            if (_currentWeapon.IsCanShoot)
+                _currentWeapon.Shoot();
         }
 
         private void OnSwitchWeapon()

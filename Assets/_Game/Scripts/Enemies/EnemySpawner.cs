@@ -1,11 +1,13 @@
 ﻿using Game.Services.Character;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game
 {
-    public class EnemySpawner : MonoBehaviour
+    public class EnemySpawner : MonoBehaviour, IDisposable
     {
         [SerializeField, Tooltip("Distance from camera to spawn Enemy in random point")]
         private float _distanceToSpawn = 5;
@@ -33,11 +35,7 @@ namespace Game
 
         private void OnDestroy()
         {
-            for (int i = 0, count = _enemyList.Count; i < count; i++)
-            {
-                var enemy = _enemyList[i];
-                enemy.OnEnemyDied -= OnEnemyDied;
-            }
+            Dispose();
         }
 
         private void SpawnEnemies()
@@ -111,6 +109,27 @@ namespace Game
             var newSpawnPos = GetRandomSpawnPosition();
             enemy.transform.position = newSpawnPos;
             enemy.ResetEnemy();
+        }
+
+        public void Dispose()
+        {
+            if (_enemyList != null && _enemyList.Count > 0)
+            {
+                for (int i = 0, count = _enemyList.Count; i < count; i++)
+                {
+                    var enemy = _enemyList[i];
+                    enemy.OnEnemyDied -= OnEnemyDied;
+                    Destroy(enemy.gameObject);
+                }
+
+                _enemyList.Clear();
+            }
+
+            _enemyList = null;
+
+            _target = null;
+
+            StopAllCoroutines();
         }
     }
 }

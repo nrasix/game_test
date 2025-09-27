@@ -37,13 +37,13 @@ namespace Game
             }
         }
 
-        private T CreateNewObject()
+        private T CreateNewObject(bool isActive = false)
         {
             T newObject = GameObject.Instantiate(_prefab, _parentTransform);
             newObject.OnRevertToPool += ReturnToPool;
             _countItems++;
             newObject.name = $"{newObject.name}_{_countItems}";
-            newObject.gameObject.SetActive(false);
+            newObject.gameObject.SetActive(isActive);
             return newObject;
         }
 
@@ -59,7 +59,7 @@ namespace Game
             }
             else
             {
-                pooledObject = CreateNewObject();
+                pooledObject = CreateNewObject(isActive);
             }
 
             return pooledObject;

@@ -1,10 +1,11 @@
 using Game.Services.Character.Data;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game
 {
-    public class HealthView : MonoBehaviour
+    public class HealthView : MonoBehaviour, IDisposable
     {
         [SerializeField] private Text _text;
 
@@ -20,13 +21,22 @@ namespace Game
 
         private void OnDestroy()
         {
-            _healthView.OnHealthChanged -= OnHealthChanged;
+            Dispose();
         }
 
         private void OnHealthChanged(int value)
         {
             string newValue = $"{value}/{_healthView.MaxHealth}";
             _text.text = newValue;
+        }
+
+        public void Dispose()
+        {
+            if (_healthView != null)
+            {
+                _healthView.OnHealthChanged -= OnHealthChanged;
+                _healthView = null;
+            }
         }
     }
 }
