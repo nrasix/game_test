@@ -31,11 +31,6 @@ namespace Game
             _character.OnLooseGame += OnLooseGame;
         }
 
-        private void OnDestroy()
-        {
-            Dispose();
-        }
-
         private void OnLooseGame()
         {
             _inputService.SetGameInput(false);

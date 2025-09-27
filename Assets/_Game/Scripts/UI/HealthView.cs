@@ -19,11 +19,6 @@ namespace Game
             _healthView.OnHealthChanged += OnHealthChanged;
         }
 
-        private void OnDestroy()
-        {
-            Dispose();
-        }
-
         private void OnHealthChanged(int value)
         {
             string newValue = $"{value}/{_healthView.MaxHealth}";
