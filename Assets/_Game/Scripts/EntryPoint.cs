@@ -112,7 +112,8 @@ namespace Game.Services
                 disposable.Dispose();
             }
 
-            Destroy(_character.gameObject);
+            if (_character != null)
+                Destroy(_character.gameObject);
 
             _healthHandler = null;
 

@@ -9,11 +9,13 @@ namespace Game
 {
     public sealed class WeaponSystem : IDisposable
     {
-        private readonly Transform _weaponSpawnPosition;
-        private readonly IInputService _inputService;
+        private Transform _weaponSpawnPosition;
+        private IInputService _inputService;
 
-        private readonly HashSet<BaseWeapon> _weapons;
-        private readonly ObjectPool<Bullet> _bulletPool;
+        private HashSet<BaseWeapon> _weapons;
+        private ObjectPool<Bullet> _bulletPool;
+
+        private GameObject _bulletPoolGO;
 
         private BaseWeapon _currentWeapon;
         private int _weaponIndex;
@@ -33,9 +35,9 @@ namespace Game
             _inputService.OnAttack += OnAttack;
             _inputService.OnSwitchWeapon += OnSwitchWeapon;
 
-            var newGameObject = new GameObject("Bullet Pool");
+            _bulletPoolGO = new GameObject("Bullet Pool");
 
-            _bulletPool = new(bulletPrefab, initializeSizePool, newGameObject.transform);
+            _bulletPool = new(bulletPrefab, initializeSizePool, _bulletPoolGO.transform);
 
             SpawnWeapon(_prefabsWeapon);
         }
@@ -68,6 +70,20 @@ namespace Game
         {
             _inputService.OnAttack -= OnAttack;
             _inputService.OnSwitchWeapon -= OnSwitchWeapon;
+            _inputService = null;
+
+            _bulletPool.Dispose();
+
+            GameObject.Destroy(_bulletPoolGO);
+            _bulletPoolGO = null;
+
+            for (int i = 0, count = _weapons.Count; i < count; i++)
+            {
+                GameObject.Destroy(_weapons.ElementAt(i).gameObject);
+            }
+
+            _weapons.Clear();
+            _weapons = null;
         }
 
         private void OnAttack()

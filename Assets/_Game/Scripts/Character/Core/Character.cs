@@ -49,6 +49,7 @@ namespace Game
         {
             _directionMoveComponent.Dispose();
             _trasformRotator.Dispose();
+            _weaponSystem.Dispose();
         }
 
         public void GetDamage(int damage)
@@ -56,7 +57,6 @@ namespace Game
             if (IsDead)
                 return;
 
-            Debug.Log("Player is get damage!");
             _healthHandler.SubjectHealth(damage);
 
             if (IsDead)

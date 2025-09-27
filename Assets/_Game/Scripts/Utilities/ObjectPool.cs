@@ -32,8 +32,13 @@ namespace Game
         {
             for (int i = 0; i < _poolQueue.Count; i++)
             {
+                if (_poolQueue.Peek() == null)
+                    continue;
+
                 var pooledObject = _poolQueue.Dequeue();
                 pooledObject.OnRevertToPool -= ReturnToPool;
+
+                GameObject.Destroy(pooledObject.gameObject);
             }
         }
 
